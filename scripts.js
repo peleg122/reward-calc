@@ -1,6 +1,6 @@
 async function fetchData() {
     const walletAddress = document.getElementById('walletAddress').value;
-    const apiUrl = `https://api.keungz.com/well-claim/${walletAddress}`;
+    const apiUrl = `https://cors-anywhere.herokuapp.com/https://api.keungz.com/well-claim/${walletAddress}`;
     try {
         const response = await fetch(apiUrl);
         const data = await response.json();
