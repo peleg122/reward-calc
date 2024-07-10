@@ -3,12 +3,7 @@ async function fetchData() {
     const apiUrl = `https://api.keungz.com/well-claim/${walletAddress}`;
 
     try {
-        const response = await fetch(apiUrl, {
-            method: 'GET',
-            headers: {
-                'Access-Control-Allow-Origin': '*'
-            }
-        });
+        const response = await fetch(apiUrl);
         if (!response.ok) {
             throw new Error('Network response was not ok');
         }
