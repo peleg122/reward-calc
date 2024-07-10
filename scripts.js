@@ -9,10 +9,6 @@ async function fetchData() {
                 'Access-Control-Allow-Origin': '*'
             }
         });
-        response.setHeader("Access-Control-Allow-Origin", "*");
-        response.setHeader("Access-Control-Allow-Credentials", "true");
-        response.setHeader("Access-Control-Allow-Methods", "GET,HEAD,OPTIONS,POST,PUT");
-        response.setHeader("Access-Control-Allow-Headers", "Access-Control-Allow-Headers, Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers");
         if (!response.ok) {
             throw new Error('Network response was not ok');
         }
@@ -32,22 +28,24 @@ function displayData(data) {
 
     ['kzg', 'kubz', 'ygpz'].forEach(classType => {
         data.airdropNFTSignatures[classType].forEach(item => {
+            const tokenId = item.contractArguments.NFTClaimable.tokenId;
             const airdrop = BigInt(item.contractArguments.NFTClaimable.airdropTotalClaimable);
             const rewards = BigInt(item.contractArguments.NFTClaimable.rewardsTotalClaimable);
 
             totalAirdrop += airdrop;
             totalRewards += rewards;
 
-            const imgUrl = data.nftImages[classType][item.contractArguments.NFTClaimable.tokenId];
+            const imgUrl = data.nftImages[classType][tokenId];
             const percentage = (Number(rewards) / Number(airdrop) * 100).toFixed(2);
 
             const galleryItem = document.createElement('div');
             galleryItem.className = 'gallery-item';
             galleryItem.innerHTML = `
+                <h3>Token ID: ${tokenId}</h3>
                 <img src="${imgUrl}" alt="${classType} Image">
                 <p>Locked Rewards: ${(airdrop / BigInt(1e18)).toString()}</p>
-                <p>Rewards Collected: ${(rewards / BigInt(1e18)).toString()}</p>
-                <p>Percentage Unlocked: ${percentage}%</p>
+                <p>Unlocked Rewards: ${(rewards / BigInt(1e18)).toString()}</p>
+                <p>Unlocked Percentage: ${percentage}%</p>
             `;
             gallery.appendChild(galleryItem);
         });
