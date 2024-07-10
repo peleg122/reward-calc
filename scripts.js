@@ -1,17 +1,20 @@
-function fetchData() {
+async function fetchData() {
     const walletAddress = document.getElementById('walletAddress').value;
-    const apiUrl = `https://api.keungz.com/well-claim/${walletAddress}?callback=processData`;
+    const apiUrl = `https://api.keungz.com/well-claim/${walletAddress}`;
 
-    const oldScript = document.getElementById('jsonp-script');
-    const newScript = document.createElement('script');
-    newScript.id = 'jsonp-script';
-    newScript.src = apiUrl;
-
-    // Replace old script with new script
-    oldScript.parentNode.replaceChild(newScript, oldScript);
+    try {
+        const response = await fetch(apiUrl);
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        const data = await response.json();
+        displayData(data);
+    } catch (error) {
+        console.error('Error fetching data:', error);
+    }
 }
 
-function processData(response) {
+function displayData(data) {
     const gallery = document.getElementById('gallery');
     gallery.innerHTML = '';
 
@@ -19,14 +22,14 @@ function processData(response) {
     let totalRewards = BigInt(0);
 
     ['kzg', 'kubz', 'ygpz'].forEach(classType => {
-        response.airdropNFTSignatures[classType].forEach(item => {
+        data.airdropNFTSignatures[classType].forEach(item => {
             const airdrop = BigInt(item.contractArguments.NFTClaimable.airdropTotalClaimable);
             const rewards = BigInt(item.contractArguments.NFTClaimable.rewardsTotalClaimable);
 
             totalAirdrop += airdrop;
             totalRewards += rewards;
 
-            const imgUrl = response.nftImages[classType][item.contractArguments.NFTClaimable.tokenId];
+            const imgUrl = data.nftImages[classType][item.contractArguments.NFTClaimable.tokenId];
             const galleryItem = document.createElement('div');
             galleryItem.className = 'gallery-item';
             galleryItem.innerHTML = `
