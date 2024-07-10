@@ -1,18 +1,17 @@
-async function fetchData() {
+function fetchData() {
     const walletAddress = document.getElementById('walletAddress').value;
-    const corsProxy = 'https://cors-anywhere.herokuapp.com/';
-    const apiUrl = `${corsProxy}https://api.keungz.com/well-claim/${walletAddress}`;
+    const apiUrl = `https://api.keungz.com/well-claim/${walletAddress}?callback=processData`;
 
-    try {
-        const response = await fetch(apiUrl);
-        const data = await response.json();
-        displayData(data);
-    } catch (error) {
-        console.error('Error fetching data:', error);
-    }
+    const oldScript = document.getElementById('jsonp-script');
+    const newScript = document.createElement('script');
+    newScript.id = 'jsonp-script';
+    newScript.src = apiUrl;
+
+    // Replace old script with new script
+    oldScript.parentNode.replaceChild(newScript, oldScript);
 }
 
-function displayData(data) {
+function processData(response) {
     const gallery = document.getElementById('gallery');
     gallery.innerHTML = '';
 
@@ -20,14 +19,14 @@ function displayData(data) {
     let totalRewards = BigInt(0);
 
     ['kzg', 'kubz', 'ygpz'].forEach(classType => {
-        data.airdropNFTSignatures[classType].forEach(item => {
+        response.airdropNFTSignatures[classType].forEach(item => {
             const airdrop = BigInt(item.contractArguments.NFTClaimable.airdropTotalClaimable);
             const rewards = BigInt(item.contractArguments.NFTClaimable.rewardsTotalClaimable);
 
             totalAirdrop += airdrop;
             totalRewards += rewards;
 
-            const imgUrl = data.nftImages[classType][item.contractArguments.NFTClaimable.tokenId];
+            const imgUrl = response.nftImages[classType][item.contractArguments.NFTClaimable.tokenId];
             const galleryItem = document.createElement('div');
             galleryItem.className = 'gallery-item';
             galleryItem.innerHTML = `
@@ -42,4 +41,3 @@ function displayData(data) {
     const totalAmount = document.getElementById('totalAmount');
     totalAmount.textContent = `Total Airdrop: ${(totalAirdrop / BigInt(1e18)).toString()} | Total Rewards: ${(totalRewards / BigInt(1e18)).toString()}`;
 }
-
