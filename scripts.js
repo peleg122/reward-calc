@@ -45,9 +45,9 @@ function displayData(data) {
             galleryItem.className = 'gallery-item';
             galleryItem.innerHTML = `
                 <img src="${imgUrl}" alt="${classType} Image">
-                <p>Airdrop: ${(airdrop / BigInt(1e18)).toString()}</p>
-                <p>Rewards: ${(rewards / BigInt(1e18)).toString()}</p>
-                <p>Percentage: ${percentage}%</p>
+                <p>Locked Rewards: ${(airdrop / BigInt(1e18)).toString()}</p>
+                <p>Rewards Collected: ${(rewards / BigInt(1e18)).toString()}</p>
+                <p>Percentage Unlocked: ${percentage}%</p>
             `;
             gallery.appendChild(galleryItem);
         });
@@ -55,5 +55,5 @@ function displayData(data) {
 
     const totalPercentage = (Number(totalRewards) / Number(totalAirdrop) * 100).toFixed(2);
     const totalAmount = document.getElementById('totalAmount');
-    totalAmount.textContent = `Total Airdrop: ${(totalAirdrop / BigInt(1e18)).toString()} | Total Rewards: ${(totalRewards / BigInt(1e18)).toString()} | Total Percentage: ${totalPercentage}%`;
+    totalAmount.textContent = `Total Locked Rewards: ${(totalAirdrop / BigInt(1e18)).toString()} | Total Unlocked Rewards: ${(totalRewards / BigInt(1e18)).toString()} | Total Unlocked Percentage: ${totalPercentage}%`;
 }
