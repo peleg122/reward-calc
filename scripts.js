@@ -1,3 +1,24 @@
+async function fetchData() {
+    const walletAddress = document.getElementById('walletAddress').value;
+    const apiUrl = `https://api.keungz.com/well-claim/${walletAddress}`;
+
+    try {
+        const response = await fetch(apiUrl, {
+            method: 'GET',
+            headers: {
+                'Access-Control-Allow-Origin': '*'
+            }
+        });
+        if (!response.ok) {
+            throw new Error('Network response was not ok');
+        }
+        const data = await response.json();
+        displayData(data);
+    } catch (error) {
+        console.error('Error fetching data:', error);
+    }
+}
+
 function displayData(data) {
     const gallery = document.getElementById('gallery');
     gallery.innerHTML = '';
