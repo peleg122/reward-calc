@@ -1,12 +1,8 @@
 async function fetchData() {
     const walletAddress = document.getElementById('walletAddress').value;
-    const apiUrl = `https://api.keungz.com/well-claim/${walletAddress}`;
-
+    const apiUrl = `https://cors-anywhere.herokuapp.com/https://api.keungz.com/well-claim/${walletAddress}`;
     try {
         const response = await fetch(apiUrl);
-        if (!response.ok) {
-            throw new Error('Network response was not ok');
-        }
         const data = await response.json();
         displayData(data);
     } catch (error) {
